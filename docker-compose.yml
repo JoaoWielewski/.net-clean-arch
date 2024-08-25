@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  sqlserver:
+    restart: always
+    container_name: teste-sqlserver
+    image: 'mcr.microsoft.com/mssql/server:2019-latest'
+    ports:
+      - '1433:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Senhaforte10@
+      - MSSQL_PID=Developer
+    volumes:
+      - sqlserver:/var/opt/mssql
+    networks:
+      - default
+
+volumes:
+  sqlserver:
+
+networks:
+  default:
