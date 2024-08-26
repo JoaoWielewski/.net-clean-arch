@@ -25,5 +25,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline. a
 app.UseHttpsRedirection();
 app.MapControllers();
+
+app.Urls.Add("http://*:5000");
+
 app.Run();
 
