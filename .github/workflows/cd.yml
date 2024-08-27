@@ -19,13 +19,13 @@ jobs:
         dotnet-version: '8.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore teste.csproj
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build teste.csproj --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish teste.csproj --configuration Release --output ./publish
 
   deploy:
     needs: build
