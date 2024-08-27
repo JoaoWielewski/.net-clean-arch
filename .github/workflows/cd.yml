@@ -27,9 +27,6 @@ jobs:
     - name: Publish
       run: dotnet publish teste.csproj --configuration Release --output ./publish
 
-    - name: List Publish Directory
-      run: ls -la ./publish
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
