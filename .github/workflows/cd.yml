@@ -31,6 +31,6 @@ jobs:
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/key.pem
         /usr/bin/chmod 600 /tmp/key.pem
-        ssh -o StrictHostKeyChecking=no -i /tmp/key.pem $USER@$HOST 'rm -rf /home/ec2-user/my-book-service-clean-arch/*'
+        ssh -o StrictHostKeyChecking=no -i /tmp/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'rm -rf /home/ec2-user/my-book-service-clean-arch/*'
         /usr/bin/scp -o StrictHostKeyChecking=no -i /tmp/key.pem -r ./publish ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PATH }}
         ssh -o StrictHostKeyChecking=no -i /tmp/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'export DefaultConnection="Server=your-server;Database=your-db;User Id=your-user;Password=your-password;"; sudo systemctl restart book-service'
