@@ -47,5 +47,5 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > /tmp/key.pem
         /usr/bin/chmod 600 /tmp/key.pem
-        /usr/bin/scp -i /tmp/key.pem -r ./publish $USER@$HOST:$PATH
-        ssh -i /tmp/key.pem $USER@$HOST 'export DefaultConnection="Server=your-server;Database=your-db;User Id=your-user;Password=your-password;"; sudo systemctl restart book-service'
+        /usr/bin/scp -o StrictHostKeyChecking=no -i /tmp/key.pem -r ./publish $USER@$HOST:$PATH
+        ssh -o StrictHostKeyChecking=no -i /tmp/key.pem $USER@$HOST 'export DefaultConnection="Server=your-server;Database=your-db;User Id=your-user;Password=your-password;"; sudo systemctl restart book-service'
