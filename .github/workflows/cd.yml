@@ -1,0 +1,46 @@
+name: CI/CD to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./publish
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        USER: ${{ secrets.EC2_USER }}
+        HOST: ${{ secrets.EC2_HOST }}
+        PATH: ${{ secrets.EC2_PATH }}
+
+      run: |
+        echo "$SSH_PRIVATE_KEY" > /tmp/key.pem
+        chmod 600 /tmp/key.pem
+        scp -i /tmp/key.pem -r ./publish $USER@$HOST:$PATH
+        ssh -i /tmp/key.pem $USER@$HOST 'export DefaultConnection="Server=your-server;Database=your-db;User Id=your-user;Password=your-password;"; sudo systemctl restart book-service'
