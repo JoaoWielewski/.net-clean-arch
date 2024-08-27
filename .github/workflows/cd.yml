@@ -40,9 +40,6 @@ jobs:
       PATH: ${{ secrets.EC2_PATH }}
 
     steps:
-    - name: List Publish Directory
-      run: ls -la ./publish
-      
     - name: Deploy to EC2
       run: |
         echo "$SSH_PRIVATE_KEY" > /tmp/key.pem
