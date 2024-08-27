@@ -30,15 +30,20 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      USER: ${{ secrets.EC2_USER }}
+      HOST: ${{ secrets.EC2_HOST }}
+      PATH: ${{ secrets.EC2_PATH }}
 
     steps:
-    - name: Deploy to EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        USER: ${{ secrets.EC2_USER }}
-        HOST: ${{ secrets.EC2_HOST }}
-        PATH: ${{ secrets.EC2_PATH }}
+    - name: Log variables
+      run: |
+        echo "USER: $USER"
+        echo "HOST: $HOST"
+        echo "PATH: $PATH"
 
+    - name: Deploy to EC2
       run: |
         echo "$SSH_PRIVATE_KEY" > /tmp/key.pem
         /usr/bin/chmod 600 /tmp/key.pem
