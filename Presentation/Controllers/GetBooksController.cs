@@ -19,7 +19,7 @@ public class GetBooksController : ControllerBase
     )
     {
         if (request.Limit <= 0) {
-            return BadRequest("Limit must be provided 2");
+            return BadRequest("Limit must be provided");
         }
 
         GetBooksResponse response = await _getBooks.Handle(request);
