@@ -6,8 +6,13 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+      USER: ${{ secrets.EC2_USER }}
+      HOST: ${{ secrets.EC2_HOST }}
+      PATH: ${{ secrets.EC2_PATH }}
     
     steps:
     - name: Checkout code
@@ -29,20 +34,10 @@ jobs:
 
     - name: List Publish Directory
       run: ls -la ./publish
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-      USER: ${{ secrets.EC2_USER }}
-      HOST: ${{ secrets.EC2_HOST }}
-      PATH: ${{ secrets.EC2_PATH }}
-
-    steps:
+    
     - name: Deploy to EC2
       run: |
         echo "$SSH_PRIVATE_KEY" > /tmp/key.pem
         /usr/bin/chmod 600 /tmp/key.pem
-        /usr/bin/scp -o StrictHostKeyChecking=no -i /tmp/key.pem -r ./publish/* $USER@$HOST:$PATH
+        /usr/bin/scp -o StrictHostKeyChecking=no -i /tmp/key.pem -r ./publish $USER@$HOST:$PATH
         ssh -o StrictHostKeyChecking=no -i /tmp/key.pem $USER@$HOST 'export DefaultConnection="Server=your-server;Database=your-db;User Id=your-user;Password=your-password;"; sudo systemctl restart book-service'
