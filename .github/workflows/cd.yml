@@ -27,6 +27,9 @@ jobs:
     - name: Publish
       run: dotnet publish teste.csproj --configuration Release --output ./publish
 
+    - name: List Publish Directory
+      run: ls -la ./publish
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -35,13 +38,6 @@ jobs:
       USER: ${{ secrets.EC2_USER }}
       HOST: ${{ secrets.EC2_HOST }}
       PATH: ${{ secrets.EC2_PATH }}
-
-    steps:
-    - name: Log variables
-      run: |
-        echo "USER: $USER"
-        echo "HOST: $HOST"
-        echo "PATH: $PATH"
 
     - name: Deploy to EC2
       run: |
